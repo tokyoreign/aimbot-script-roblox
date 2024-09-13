@@ -1,7 +1,6 @@
 local cameraToggle = false
 local cameraTarget = nil
 
--- Function to find the closest player to the center of the screen, excluding the local player
 local function findClosestPlayerToScreenCenter()
     local playerList = game.Players:GetPlayers()
     local center = Vector2.new(workspace.CurrentCamera.ViewportSize.X / 2, workspace.CurrentCamera.ViewportSize.Y / 2)
@@ -26,7 +25,7 @@ local function findClosestPlayerToScreenCenter()
     return closestPlayer
 end
 
--- Function to aim the camera at a specific player
+
 local function aimCameraAtPlayer(player)
     if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
         local camera = game.Workspace.CurrentCamera
@@ -35,7 +34,7 @@ local function aimCameraAtPlayer(player)
     end
 end
 
--- Function to toggle the camera aim on/off
+
 local function toggleCameraAim()
     cameraToggle = not cameraToggle
     if cameraToggle then
@@ -55,14 +54,14 @@ local function toggleCameraAim()
     end
 end
 
--- Connect the toggleCameraAim function to the "E" key press
+
 game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
     if not gameProcessedEvent and input.KeyCode == Enum.KeyCode.E then
         toggleCameraAim()
     end
 end)
 
--- Continuously aim the camera at the closest player if the cameraToggle is on
+
 local runService = game:GetService("RunService")
 runService.RenderStepped:Connect(function()
     if cameraToggle and cameraTarget then
