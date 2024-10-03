@@ -66,6 +66,19 @@ local function toggleCameraAim()
     end
 end
 
+-- Function to check if the current target is still alive and within range
+local function isTargetValid(player)
+    local humanoid = player.Character and player.Character:FindFirstChild("Humanoid")
+    local head = player.Character and player.Character:FindFirstChild("Head")
+    local localHead = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Head")
+    
+    if humanoid and humanoid.Health > 0 and head and localHead then
+        local distance = (localHead.Position - head.Position).Magnitude
+        return distance <= maxDistance  -- Ensure the target is still within 150 studs
+    end
+    return false
+end
+
 -- Connect the toggleCameraAim function to the "E" key press
 game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
     if not gameProcessedEvent and input.KeyCode == Enum.KeyCode.E then
@@ -73,11 +86,13 @@ game:GetService("UserInputService").InputBegan:Connect(function(input, gameProce
     end
 end)
 
--- Continuously aim at the closest player's head if the cameraToggle is on
+-- Continuously aim the camera at the closest player's head if the cameraToggle is on
 game:GetService("RunService").RenderStepped:Connect(function()
     if cameraToggle then
-        -- Always find and aim at the closest player
-        cameraTarget = findClosestPlayer()
+        -- Check if the current target is still valid, otherwise find a new one
+        if not cameraTarget or not isTargetValid(cameraTarget) then
+            cameraTarget = findClosestPlayer()
+        end
 
         -- Aim at the new target if it exists
         if cameraTarget then
